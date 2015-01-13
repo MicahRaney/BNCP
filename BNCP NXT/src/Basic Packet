@@ -1,0 +1,15 @@
+Basic Packet:
+
+Note:ubyte = unsigned byte)
+
+[ubyte datType][ubyte cmdLen][cmd...][ubyte val]
+
+Data type (see the static variables in Packet)
+Number of bytes of cmd.
+Cmd (to be interpreted as text)
+val - a byte to represent a value (ie a sensor value)
+
+
+Rev 2.0
+sensor|port|command|operator|value|args
+ultrasonic.2.notify.lessthan.10..
