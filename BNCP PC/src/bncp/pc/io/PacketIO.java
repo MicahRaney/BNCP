@@ -53,20 +53,10 @@ public class PacketIO {
 	 *            Packet to send.
 	 */
 	public void send(Packet pkt) throws IOException {
-
-		if (pkt instanceof MotorPacket)
-			out.write(MOTOR_PACKET);
-		else if (pkt instanceof GetPacket)
-			out.write(GET_PACKET);
-		else if (pkt instanceof ReplyPacket)
-			out.write(REPLY_PACKET);
-		else if (pkt instanceof InitPacket)
-			out.write(INIT_PACKET);
-		else if (pkt instanceof SetPacket)
-			out.write(SET_PACKET);
-		else
-			throw new IllegalArgumentException(
-					"The packet type is not supported! Modify the code to recognize it!");
+		
+		
+		out.write(getPacketID(pkt));//write the packet ID number.
+		
 
 		pkt.send(out);// send the packet.
 		out.flush();
