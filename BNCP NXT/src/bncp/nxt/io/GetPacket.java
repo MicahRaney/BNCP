@@ -1,4 +1,4 @@
-package bncp.nxt;
+package bncp.nxt.io;
 
 import java.io.IOException;
 import java.io.DataInputStream;

@@ -1,6 +1,12 @@
 package bncp.nxt;
 import java.io.IOException;
 
+import bncp.nxt.io.GetPacket;
+import bncp.nxt.io.InitPacket;
+import bncp.nxt.io.MotorPacket;
+import bncp.nxt.io.Packet;
+import bncp.nxt.io.PacketIO;
+import bncp.nxt.io.SetPacket;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.LightSensor;
@@ -66,8 +72,8 @@ public class USBConnectionServer extends Thread {
 	private void handlePacket(Packet pkt) throws IOException{
 		if(pkt instanceof GetPacket)
 			handleGetPacket((GetPacket)pkt);
-		else if (pkt instanceof MovePacket)
-			handleMovePacket((MovePacket)pkt);
+		else if (pkt instanceof MotorPacket)
+			handleMovePacket((MotorPacket)pkt);
 		else if(pkt instanceof InitPacket)
 			handleInitPacket((InitPacket)pkt);
 		else if(pkt instanceof SetPacket)
@@ -118,18 +124,18 @@ public class USBConnectionServer extends Thread {
 		}
 	}
 	
-	private void handleMovePacket(MovePacket pkt) throws IOException{
+	private void handleMovePacket(MotorPacket pkt) throws IOException{
 		NXTRegulatedMotor motor = getMotorPort(pkt.port);
 		boolean noBlock = !pkt.confirm;//prevent blocks for efficiency or wait til the operation is done.
-		if(pkt.value == MovePacket.INFINITE){
+		if(pkt.value == MotorPacket.INFINITE){
 			if(pkt.forward)
 				motor.forward();
 			else
 				motor.backward();
 		}
-		else if(pkt.value == MovePacket.STOP_CODE)
+		else if(pkt.value == MotorPacket.STOP_CODE)
 			motor.stop(noBlock);
-		else if(pkt.value == MovePacket.CLEAR)
+		else if(pkt.value == MotorPacket.CLEAR)
 			motor.resetTachoCount();
 		else{
 

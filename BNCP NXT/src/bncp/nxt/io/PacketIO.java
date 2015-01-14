@@ -1,9 +1,11 @@
-package bncp.nxt;
+package bncp.nxt.io;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+
+import bncp.nxt.ReplyPacket;
 //import lejos.pc.comm.NXTComm;
 import lejos.nxt.comm.NXTConnection;
 

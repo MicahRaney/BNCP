@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import bncp.nxt.io.Packet;
+
 public class ReplyPacket extends Packet {
 
 	public int device, port, value;
