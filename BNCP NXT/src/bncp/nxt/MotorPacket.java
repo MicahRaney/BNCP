@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-public class MovePacket extends Packet {
+public class MotorPacket extends Packet {
 
 	public int device, port, value;
 	public boolean forward, confirm;
 	public static int CLEAR = -2, STOP_CODE = -1, INFINITE = 0;
 	
-	public MovePacket(){};
+	public MotorPacket(){};
 	
 	/**
 	 * Initializes the packet to set the device at port to value.
@@ -19,7 +19,7 @@ public class MovePacket extends Packet {
 	 * @param value Value to set the device to.
 	 * @param direction (Primarily for motors) True should be forward.
 	 */
-	public MovePacket(int device, int port, int value, boolean direction, boolean doConfirm) {
+	public MotorPacket(int device, int port, int value, boolean direction, boolean doConfirm) {
 		this.device = device;
 		this.port = port;
 		this.value = value;
