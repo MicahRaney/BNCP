@@ -11,6 +11,7 @@ public class NXTPSensor implements EmulatedSensor {
 		sensor = sensorID;
 		port = portID;
 	}
+	@Override
 	public int read() throws IOException, InterruptedException {
 		return conn.getSensorValue(sensor, port);
 	}

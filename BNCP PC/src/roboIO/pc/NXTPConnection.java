@@ -44,6 +44,7 @@ public class NXTPConnection extends Thread {
 			
 	}
 	
+	@Override
 	public void run(){
 		
 		try{
@@ -190,6 +191,7 @@ public class NXTPConnection extends Thread {
 		public PendingHolder(int id){
 			this.ID = id;
 		}
+		@Override
 		public boolean equals(Object obj){
 			if(((PendingHolder)obj).ID == ID)
 				return true;

@@ -19,6 +19,7 @@ public class GeometricPlane extends JComponent {
 		this.setPreferredSize(new Dimension(cx*2,cy*2));
 	}
 	
+	@Override
 	public void paint(Graphics g){
 		g.setColor(Color.RED);
 		g.fillOval(cx-offset, cy-offset,ovalwidth , ovalwidth);

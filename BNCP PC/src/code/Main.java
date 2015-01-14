@@ -1,20 +1,8 @@
 package code;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Arrays;
-import java.util.Scanner;
-
-import javax.swing.JFrame;
-
-import roboIO.nav.PlaneNavigator;
-import roboIO.pc.EmulatedMotor;
 import roboIO.pc.EmulatedSensor;
 import lejos.pc.comm.NXTCommException;
 import roboIO.Packet;
-import roboIO.PacketIO;
 import roboIO.pc.NXTPConnection;
 
 
@@ -31,7 +19,6 @@ public class Main {
 		conn.init();
 		conn.setDaemon(true);
 		conn.start();
-		//conn.initSensor(Packet.HT_COMPASS, Packet.PORT_3);
 		EmulatedSensor comp = conn.getEmulatedSensor(Packet.ULTRASONIC, Packet.PORT_4);
 		conn.rotateMotor(Packet.PORT_A, 145, true);
 		conn.clearMotorTachometer(Packet.PORT_A);
@@ -55,7 +42,9 @@ public class Main {
 			mot.stop();
 			System.out.println("Stopped");
 			Thread.sleep(100);
-		}*/
+		}*///import roboIO.Packet;
+		//import roboIO.pc.EmulatedMotor;
+		//import roboIO.pc.NXTPConnection;
 		/*
 		JFrame window = new JFrame("RC");
 		window.add(new RCPanel(conn.getEmulatedMotor(Packet.PORT_B),conn.getEmulatedMotor(Packet.PORT_C)));
