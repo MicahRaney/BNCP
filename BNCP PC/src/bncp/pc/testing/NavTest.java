@@ -22,7 +22,7 @@ public class NavTest {
 	 * @throws NXTCommException 
 	 */
 	public static void main(String[] args) throws InterruptedException, IOException, NXTCommException {
-		NXTPConnection conn = new NXTPConnection();
+		/*NXTPConnection conn = new NXTPConnection();
 		conn.init();
 		conn.setDaemon(true);
 		conn.start();
@@ -71,7 +71,7 @@ public class NavTest {
 				
 			}
 			Thread.sleep(50);
-		}
+		}*/
 	}
 
 	public static void putln(String str){

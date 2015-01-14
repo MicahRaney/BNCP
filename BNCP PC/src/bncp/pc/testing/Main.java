@@ -17,7 +17,7 @@ public class Main {
 	 * @throws InterruptedException 
 	 */
 	public static void main(String[] args) throws IOException, NXTCommException, InterruptedException {
-		NXTPConnection conn = new NXTPConnection();
+		/*NXTPConnection conn = new NXTPConnection();
 		conn.init();
 		conn.setDaemon(true);
 		conn.start();
@@ -29,7 +29,7 @@ public class Main {
 			//System.out.println(conn.getSensorValue(Packet.HT_COMPASS, Packet.PORT_3));
 			System.out.println(comp.read());
 			Thread.sleep(100);
-		}
+		}*/
 		
 		
 		/*EmulatedMotor mot = conn.getEmulatedMotor(Packet.PORT_B);
