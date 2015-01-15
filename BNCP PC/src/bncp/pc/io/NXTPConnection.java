@@ -1,10 +1,7 @@
 package bncp.pc.io;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.LinkedList;
-import java.util.Scanner;
-
 import bncp.pc.sensors.EmulatedMotor;
 import bncp.pc.sensors.EmulatedSensor;
 import bncp.pc.sensors.NXTPMotor;
@@ -19,6 +16,7 @@ import lejos.pc.comm.NXTInfo;
  * @author Micah Raney
  *
  */
+@Deprecated
 public class NXTPConnection extends Thread {
 
 	private volatile LinkedList<PendingHolder> pending = new LinkedList<PendingHolder>();
