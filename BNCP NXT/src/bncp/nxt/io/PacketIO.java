@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-
 import bncp.nxt.ReplyPacket;
 //import lejos.pc.comm.NXTComm;
 import lejos.nxt.comm.NXTConnection;
@@ -70,6 +69,7 @@ public class PacketIO {
 		int type = in.read();// what type of packet is it.
 		Packet pkt = getPacketType(type);
 		pkt.recieve(in);// read the packet.
+		
 		return pkt;
 	}
 
@@ -91,15 +91,15 @@ public class PacketIO {
 	 */
 	public static int getPacketID(Packet pkt) {
 		if (pkt instanceof MotorPacket)
-			return 1;//return MotorPacket ID.
+			return MOTOR_PACKET;//return MotorPacket ID.
 		else if (pkt instanceof GetPacket)
-			return 2;//GetPacket ID.
+			return GET_PACKET;//GetPacket ID.
 		else if (pkt instanceof ReplyPacket)
-			return 3;//ReplyPacket ID.
+			return REPLY_PACKET;//ReplyPacket ID.
 		else if (pkt instanceof InitPacket)
-			return 4;//InitPacket ID
+			return INIT_PACKET;//InitPacket ID
 		else if (pkt instanceof SetPacket)
-			return 5;//SetPacket ID
+			return SET_PACKET;//SetPacket ID
 		else
 			throw new IllegalArgumentException(
 					"The packet type is not supported! Invalid Packet: " + pkt.getClass());
@@ -112,6 +112,7 @@ public class PacketIO {
 	 * 
 	 * At the time of writing, the packet IDs are: 1-MotorPacket 2-GetPacket
 	 * 3-ReplyPacket 4-InitPacket 5-SetPacket
+	 * TODO: Update packet ID numbers. Inaccurate.
 	 * 
 	 * @param ID
 	 *            ID of the Packet type.

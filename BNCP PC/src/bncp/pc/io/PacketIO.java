@@ -94,15 +94,15 @@ public class PacketIO {
 	 */
 	public static int getPacketID(Packet pkt) {
 		if (pkt instanceof MotorPacket)
-			return 1;//return MotorPacket ID.
+			return MOTOR_PACKET;//return MotorPacket ID.
 		else if (pkt instanceof GetPacket)
-			return 2;//GetPacket ID.
+			return GET_PACKET;//GetPacket ID.
 		else if (pkt instanceof ReplyPacket)
-			return 3;//ReplyPacket ID.
+			return REPLY_PACKET;//ReplyPacket ID.
 		else if (pkt instanceof InitPacket)
-			return 4;//InitPacket ID
+			return INIT_PACKET;//InitPacket ID
 		else if (pkt instanceof SetPacket)
-			return 5;//SetPacket ID
+			return SET_PACKET;//SetPacket ID
 		else
 			throw new IllegalArgumentException(
 					"The packet type is not supported! Invalid Packet: " + pkt.getClass());
