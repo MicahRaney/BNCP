@@ -2,6 +2,8 @@ package bncp.pc.sensors;
 
 import java.io.IOException;
 
+import bncp.pc.io.GetPacket;
+import bncp.pc.io.MotorPacket;
 import bncp.pc.io.NXTPConnection;
 import bncp.pc.io.Packet;
 
@@ -17,13 +19,22 @@ public class NXTPMotor implements EmulatedMotor{
 	}
 	
 	@Override
-	public void rotate(int rotationDegrees) throws IOException, InterruptedException {
-		conn.rotateMotor(port, rotationDegrees, true);
+	public void rotate(int rotation, boolean block) throws IOException, InterruptedException {
+		boolean forward = true;
+		if (rotation < 0) {
+			forward = false;
+			rotation *= -1;
+		}
+		Packet pkt = new MotorPacket(port, rotation, forward, block);
+		if (block)
+			conn.waitForReply(pkt, Packet.MOTOR, port);
+		else
+			conn.send(pkt);
 	}
 
 	@Override
 	public void start(boolean direction) throws IOException{
-		conn.startMotor(port, direction);
+		conn.send(new MotorPacket(port, 0, direction, false));
 	}
 
 	@Override
@@ -33,17 +44,22 @@ public class NXTPMotor implements EmulatedMotor{
 
 	@Override
 	public int getDegrees() throws IOException, InterruptedException {
-		return conn.getSensorValue(Packet.MOTOR, port);
+		return conn.waitForReply(new GetPacket(Packet.MOTOR, port), Packet.MOTOR, port).value;
 	}
-
+ 
 	@Override
-	public void clearCounter() throws IOException {
-		conn.clearMotorTachometer(port);//clear the tacho count.
+	public void clearTachometer() throws IOException {
+		conn.send(new MotorPacket(port, MotorPacket.CLEAR, false, true));
 	}
 
 	@Override
 	public void stop(boolean block) throws IOException, InterruptedException {
-		conn.stopMotor(port, block);
+		Packet pkt = new MotorPacket(port, -1, false, block);
+		if (block)
+			conn.waitForReply(pkt, Packet.MOTOR, port);
+		else
+			conn.send(pkt);
 	}
+
 
 }
