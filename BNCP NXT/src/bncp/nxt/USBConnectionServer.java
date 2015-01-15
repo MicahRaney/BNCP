@@ -37,7 +37,8 @@ public class USBConnectionServer extends Thread {
 		USBConnection conn;
 		System.out.println("Waiting for connection");
 		do{
-			conn = USB.waitForConnection(1000, NXTConnection.RAW);
+			
+			conn = USB.waitForConnection();
 	
 		}while(conn == null);
 		System.out.println("Connection Found!");
@@ -70,6 +71,7 @@ public class USBConnectionServer extends Thread {
 	}
 	
 	private void handlePacket(Packet pkt) throws IOException{
+		
 		if(pkt instanceof GetPacket)
 			handleGetPacket((GetPacket)pkt);
 		else if (pkt instanceof MotorPacket)
@@ -102,6 +104,7 @@ public class USBConnectionServer extends Thread {
 	}
 	private void handleGetPacket(GetPacket pkt) throws IOException{
 		int val = 0;
+		System.out.println("get " + pkt.device +"@" + pkt.port);
 		try{
 			val = devices[pkt.port].read();
 		}
@@ -144,7 +147,7 @@ public class USBConnectionServer extends Thread {
 			motor.rotate(pkt.value, noBlock);
 		}
 		if(!noBlock){
-			io.send(new ReplyPacket(pkt.device,pkt.port,motor.getTachoCount()));
+			io.send(new ReplyPacket(Packet.MOTOR,pkt.port,motor.getTachoCount()));
 			System.out.println("Replied to mot");
 		}
 		System.out.println("Handled motor...");

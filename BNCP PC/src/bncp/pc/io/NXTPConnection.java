@@ -1,7 +1,9 @@
 package bncp.pc.io;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 import bncp.pc.sensors.EmulatedMotor;
 import bncp.pc.sensors.EmulatedSensor;
@@ -14,13 +16,14 @@ import lejos.pc.comm.NXTInfo;
 
 /**
  * @deprecated
- * @author micah
+ * @author Micah Raney
  *
  */
 public class NXTPConnection extends Thread {
 
 	private volatile LinkedList<PendingHolder> pending = new LinkedList<PendingHolder>();
 	private NXTComm conn;
+
 	private PacketIO io;
 
 	/**
@@ -39,8 +42,8 @@ public class NXTPConnection extends Thread {
 			throw new NXTCommException("No NXT Found!");
 		}
 		System.out.println("Connecting to the first NXT available...");
-		conn.open(nxts[0], NXTComm.RAW);
-
+		conn.open(nxts[0], NXTComm.PACKET);
+		
 		System.out.println("Connected! Initializing IO...");
 		io = new PacketIO(conn);
 		System.out.println("IO Initialized!");
@@ -49,6 +52,9 @@ public class NXTPConnection extends Thread {
 
 	@Override
 	public void run() {
+
+		if (conn == null)
+			throw new IllegalStateException("NXTPConnection not initialized! Cannot continue!");
 
 		try {
 
@@ -73,6 +79,7 @@ public class NXTPConnection extends Thread {
 			System.out.println("Something happened in NXTPConnection!");
 			e.printStackTrace();
 		}
+
 	}
 
 	/**
@@ -83,7 +90,7 @@ public class NXTPConnection extends Thread {
 	 * @throws IOException
 	 *             If an IOException occurs.
 	 */
-	private synchronized void send(Packet pkt) throws IOException {
+	public synchronized void send(Packet pkt) throws IOException {
 		io.send(pkt);
 	}
 
@@ -117,36 +124,7 @@ public class NXTPConnection extends Thread {
 	}
 
 	public void clearMotorTachometer(int port) throws IOException {
-		send(new MotorPacket(Packet.MOTOR, port, MotorPacket.CLEAR, false, true));
-	}
-
-	public void rotateMotor(int port, int rotation, boolean block)
-			throws IOException, InterruptedException {
-		boolean forward = true;
-		if (rotation < 0) {
-			forward = false;
-			rotation *= -1;
-		}
-		Packet pkt = new MotorPacket(Packet.MOTOR, port, rotation, forward,
-				block);
-		if (block)
-			waitForReply(pkt, Packet.MOTOR, port);
-		else
-			send(pkt);
-
-	}
-
-	public void startMotor(int port, boolean isForward) throws IOException {
-		send(new MotorPacket(Packet.MOTOR, port, 0, isForward, false));
-	}
-
-	public void stopMotor(int port, boolean block) throws IOException,
-			InterruptedException {
-		Packet pkt = new MotorPacket(Packet.MOTOR, port, -1, false, block);
-		if (block)
-			waitForReply(pkt, Packet.MOTOR, port);
-		else
-			send(pkt);
+		send(new MotorPacket(port, MotorPacket.CLEAR, false, true));
 	}
 
 	public EmulatedSensor getEmulatedSensor(int device, int port)
@@ -159,8 +137,14 @@ public class NXTPConnection extends Thread {
 		return new NXTPMotor(this, port);
 	}
 
-	private ReplyPacket waitForReply(Packet toSend, int sensor, int port)
+	public ReplyPacket waitForReply(Packet toSend, int sensor, int port)
 			throws IOException, InterruptedException {
+
+		if (!isAlive())// if the thread has stopped/hasn't started, throw
+								// an
+			// exception.
+			throw new IllegalStateException(
+					"The NXTPConnection thread is not running! Cannot wait for a reply packet!");
 
 		PendingHolder hld = new PendingHolder(Packet.getEncodedDevicePort(
 				sensor, port));
@@ -176,19 +160,6 @@ public class NXTPConnection extends Thread {
 
 	}
 
-	/*
-	 * public void run(){ try{ this.sleep(10); } catch(InterruptedException e){
-	 * 
-	 * } while(!this.isInterrupted()){
-	 * 
-	 * } }
-	 * 
-	 * /** Stops the connection thread.
-	 */
-	/*
-	 * public void kill(){ this.interrupt(); }
-	 */
-
 	/**
 	 * Attempts to close the connection with the NXT
 	 * 
@@ -198,6 +169,7 @@ public class NXTPConnection extends Thread {
 	public void close() throws IOException {
 		conn.close();
 	}
+
 
 	public static class PendingHolder {
 		public int ID;
