@@ -1,4 +1,5 @@
 package bncp.pc.testing;
+import bncp.pc.sensors.EmulatedMotor;
 import bncp.pc.sensors.EmulatedSensor;
 import bncp.pc.io.NXTPConnection;
 import bncp.pc.io.Packet;
@@ -17,6 +18,14 @@ public class Main {
 	 * @throws InterruptedException 
 	 */
 	public static void main(String[] args) throws IOException, NXTCommException, InterruptedException {
+		NXTPConnection conn = new NXTPConnection();
+		conn.init();
+		conn.setDaemon(true);
+		conn.start();
+		EmulatedMotor motorA = conn.getEmulatedMotor(Packet.PORT_A);
+		
+		motorA.rotate(90, true);
+		motorA.rotate(-90, true);
 		/*NXTPConnection conn = new NXTPConnection();
 		conn.init();
 		conn.setDaemon(true);
