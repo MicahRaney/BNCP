@@ -10,7 +10,7 @@ import java.util.Scanner;
 import lejos.pc.comm.NXTCommException;
 
 
-public class Main {
+public class MotorSpeedTest {
 
 	/**
 	 * @param args
