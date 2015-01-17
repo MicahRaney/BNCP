@@ -73,5 +73,17 @@ public interface EmulatedMotor {
 	 * @throws IOException
 	 */
 	public void clearTachometer() throws IOException;
+	
+	
+	/**
+	 * (from lejos.nxt.NXTRegulatedMotor javadoc)
+	 * Sets desired motor speed , in degrees per second; The maximum reliably
+	 * sustainable velocity is 100 x battery voltage under moderate load, such
+	 * as a direct drive robot on the level.
+	 * 
+	 * @param speed Speed of motor in degrees per second.
+	 * @throws IOException If an IOException Occurs
+	 */
+	public void setSpeed(int speed) throws IOException;
 
 }
