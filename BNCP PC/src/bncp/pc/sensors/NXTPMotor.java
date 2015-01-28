@@ -64,19 +64,42 @@ public class NXTPMotor implements EmulatedMotor {
 	}
 
 	/**
-	 * (from lejos.nxt.NXTRegulatedMotor javadoc)
-	 * Sets desired motor speed , in degrees per second; The maximum reliably
-	 * sustainable velocity is 100 x battery voltage under moderate load, such
-	 * as a direct drive robot on the level.
+	 * (from lejos.nxt.NXTRegulatedMotor javadoc) Sets desired motor speed , in
+	 * degrees per second; The maximum reliably sustainable velocity is 100 x
+	 * battery voltage under moderate load, such as a direct drive robot on the
+	 * level.
 	 * 
-	 * @param speed Speed of motor in degrees per second.
-	 * @throws IOException If an IOException Occurs
+	 * Note: Setting this to zero will stop the motor. Additionally, if the
+	 * motor is stopped, setting a speed will not start the motor.
+	 * 
+	 * @param speed
+	 *            Speed of motor in degrees per second.
+	 * @throws IOException
+	 *             If an IOException Occurs
 	 */
 	public void setSpeed(int speed) throws IOException {
 		SetPacket pkt = new SetPacket(Packet.MOTOR, port,
 				SetPacket.MOTOR_SPEED, speed);
 		// send a packet for the motor at at the predetermined port. Set motor
 		// speed to val_speed.
+		conn.send(pkt);
+	}
+
+	/**
+	 * (from lejos.nxt.NXTRegulatedMotor javadoc): sets the acceleration rate of
+	 * this motor in degrees/sec/sec The default value is 6000; Smaller values
+	 * will make speeding up. or stopping at the end of a rotate() task,
+	 * smoother;
+	 * 
+	 * @param acceleration
+	 *            Acceleration (in degrees*sec^-2) of the motor
+	 * @throws IOException
+	 *             If an IOException occurs.
+	 */
+	public void setAcceleration(int acceleration) throws IOException {
+		SetPacket pkt = new SetPacket(Packet.MOTOR, port,
+				SetPacket.MOTOR_ACCEL, acceleration);// compose a packet to set
+														// acceleration
 		conn.send(pkt);
 	}
 
