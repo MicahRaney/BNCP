@@ -20,7 +20,7 @@ import lejos.pc.comm.NXTInfo;
 public class NXTPConnection extends Thread {
 
 	private volatile LinkedList<PendingHolder> pending = new LinkedList<PendingHolder>();
-	private NXTComm conn;
+
 
 	private PacketIO io;
 
@@ -33,7 +33,7 @@ public class NXTPConnection extends Thread {
 	 */
 	public void init() throws NXTCommException {
 
-		conn = NXTCommFactory.createNXTComm(NXTCommFactory.USB);
+		NXTComm conn = NXTCommFactory.createNXTComm(NXTCommFactory.USB);
 		NXTInfo[] nxts = conn.search(null);
 		if (nxts.length == 0) {
 			System.out.println("No NXT Found!");
@@ -47,11 +47,23 @@ public class NXTPConnection extends Thread {
 		System.out.println("IO Initialized!");
 
 	}
+	
+	public NXTPConnection(){
+		
+	}
+	
+	/**
+	 * Create an NXTPConnection using the PacketIO given.
+	 * @param io PacketIO to do communication with.
+	 */
+	public NXTPConnection(PacketIO io){
+		this.io = io;
+	}
 
 	@Override
 	public void run() {
 
-		if (conn == null)
+		if (io == null)
 			throw new IllegalStateException("NXTPConnection not initialized! Cannot continue!");
 
 		try {
@@ -165,7 +177,7 @@ public class NXTPConnection extends Thread {
 	 *             If an IOException occurs
 	 */
 	public void close() throws IOException {
-		conn.close();
+		throw new IllegalStateException("Method not implemented!");
 	}
 
 

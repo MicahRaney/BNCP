@@ -3,6 +3,7 @@ package bncp.pc.io;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.Map;
 
 import lejos.pc.comm.NXTComm;
@@ -16,7 +17,7 @@ public class PacketIO {
 	// public static String ENCODING="UTF-8";
 
 	private static int MOTOR_PACKET = 0, GET_PACKET = 1, REPLY_PACKET = 2,
-			INIT_PACKET = 3, SET_PACKET = 4;
+			INIT_PACKET = 3, SET_PACKET = 4, PING_PACKET = 5;
 	DataInputStream in = null;
 	DataOutputStream out = null;
 
@@ -30,6 +31,17 @@ public class PacketIO {
 		this(new DataInputStream(conn.getInputStream()), new DataOutputStream(
 				conn.getOutputStream()));
 		// this(conn.openDataInputStream(), conn.openDataOutputStream());
+	}
+	/**
+	 * Initializes the PacketIO to use the Socket given.
+	 * 
+	 * @param conn
+	 *            Connection to use.
+	 * @throws IOException If an IOException occurs.
+	 */
+	public PacketIO(Socket conn) throws IOException {
+		this(new DataInputStream(conn.getInputStream()), new DataOutputStream(
+				conn.getOutputStream()));
 	}
 
 	/**
@@ -103,6 +115,8 @@ public class PacketIO {
 			return INIT_PACKET;//InitPacket ID
 		else if (pkt instanceof SetPacket)
 			return SET_PACKET;//SetPacket ID
+		else if (pkt instanceof PingPacket)
+			return PING_PACKET;//PingPacket ID
 		else
 			throw new IllegalArgumentException(
 					"The packet type is not supported! Invalid Packet: " + pkt.getClass());
@@ -132,6 +146,8 @@ public class PacketIO {
 			pkt = new InitPacket();
 		else if (ID == SET_PACKET)
 			pkt = new SetPacket();
+		else if (ID == PING_PACKET)
+			pkt = new PingPacket();
 		else
 			throw new IllegalArgumentException("Unrecognized Packet ID! ID="
 					+ ID);
