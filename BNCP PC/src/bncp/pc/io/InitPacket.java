@@ -29,5 +29,10 @@ public class InitPacket extends Packet {
 	public int getDevicePortCode() {
 		return Packet.getEncodedDevicePort(device, port);
 	}
+	
+	@Override
+	public String toString() {
+		return "InitPacket(Device=" + device + ", port=" + port;
+	}
 
 }

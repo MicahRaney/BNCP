@@ -60,4 +60,30 @@ public class MotorPacket extends Packet {
 		return Packet.getEncodedDevicePort(Packet.MOTOR, port);
 	}
 
+	@Override
+	public String toString() {
+		String ret = "MotorPacket(Port=" +  port;
+		
+		ret+= ", confirm=";
+		if(confirm)
+			ret += "yes";
+		else
+			ret += "no";
+		
+		ret += ", rotation=";
+		if(value > 0)
+			ret += value;
+		
+		else if (value == STOP_CODE)
+			ret += "STOP";
+		else if (value == INFINITE)
+			ret += "INFINITE";
+		else if (value == CLEAR)
+			ret += "CLEAR";
+		else
+			ret += "??" + value + "??";
+		
+		ret += ")";
+		return ret;
+	}
 }

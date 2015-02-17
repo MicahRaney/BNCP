@@ -25,5 +25,9 @@ public class PingPacket extends Packet {
 	public int getDevicePortCode() {
 		return 0;
 	}
+	
+	public String toString(){
+		return "PingPacket()";
+	}
 
 }

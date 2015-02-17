@@ -35,4 +35,7 @@ public class GetPacket extends Packet {
 		return Packet.getEncodedDevicePort(device, port);
 	}
 
+	public String toString(){
+		return "GetPacket(Device=" + device + ", port=" + port;
+	}
 }

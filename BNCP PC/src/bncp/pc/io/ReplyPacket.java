@@ -7,15 +7,16 @@ import java.io.IOException;
 public class ReplyPacket extends Packet {
 
 	public int device, port, value;
-		
-	public ReplyPacket(){};
-	
-	public ReplyPacket(int device, int port, int value){
+
+	public ReplyPacket() {
+	};
+
+	public ReplyPacket(int device, int port, int value) {
 		this.device = device;
 		this.port = port;
 		this.value = value;
 	}
-	
+
 	@Override
 	public void send(DataOutputStream out) throws IOException {
 		out.write(Packet.getEncodedDevicePort(device, port));
@@ -29,10 +30,16 @@ public class ReplyPacket extends Packet {
 		port = Packet.decodePort(devicePort);
 		value = in.readInt();
 	}
-	
+
 	@Override
 	public int getDevicePortCode() {
 		return Packet.getEncodedDevicePort(device, port);
+	}
+
+	@Override
+	public String toString() {
+		return "ReplyPacket(Device=" + device + ", port=" + port + "value="
+				+ value + ")";
 	}
 
 }

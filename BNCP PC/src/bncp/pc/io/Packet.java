@@ -26,13 +26,18 @@ public abstract class Packet {
 	public abstract void recieve(DataInputStream in) throws IOException;
 
 	/**
+	 * Returns a textual interpretation of the Packet.
+	 */
+	public abstract String toString();
+	
+	/**
 	 * Returns the device and port, encoded as an integer (but actually a byte).
 	 * Format: first 5 bits are the sensor id, last three are the port number.
 	 */
 	public static int getEncodedDevicePort(int device, int port) {
 		return (device & 0x1f) << 3 | (port & 0x7);
 	}
-
+	
 	/**
 	 * Returns the port that is encoded in the devicePortCode. The port code is
 	 * the last 3 bits of the 8 bit devicePortCode. (ie devicePortCode & 0x7).
