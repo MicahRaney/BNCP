@@ -7,12 +7,13 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 
 import lejos.pc.comm.NXTCommException;
-import bncp.pc.io.NXTPConnection;
+import bncp.pc.io.BNCPConnection;
+import bncp.pc.io.BNCPConnectionFactory;
 import bncp.pc.io.Packet;
 import bncp.pc.sensors.EmulatedMotor;
 import bncp.pc.testing.MovementControlPanel;
+import bncp.pc.testing.pinch.gui.MotorControlPanel;
 import bncp.pc.wifi.Common;
-import bncp.pc.wifi.client.WifiClient;
 import bncp.pc.wifi.server.PingDaemon;
 import bncp.pc.wifi.server.WifiServer;
 
@@ -20,48 +21,65 @@ public class Main {
 
 	public static void main(String[] args) throws NXTCommException, IOException {
 		Scanner in = new Scanner(System.in);
-		NXTPConnection conn;
-		System.out.print("Server | client: ");
-		switch(in.nextLine().toLowerCase()){
-		
+		BNCPConnection conn;
+		PingDaemon pd;
+		WifiServer server;
+		System.out.print("Server | client | debug-client: ");
+		switch (in.nextLine().toLowerCase()) {
+
 		case "server":
 
-			conn = new NXTPConnection();
-			conn.init();
-			WifiServer server = new WifiServer(conn);
+			conn = BNCPConnectionFactory.getUSBConnection();
+			server = new WifiServer(conn);
 
-			PingDaemon pd = new PingDaemon(conn, Common.PING_ALARM);
+			pd = new PingDaemon(conn, Common.PING_ALARM);
 			server.addPingListener(pd);
 			server.start();
 			pd.start();
-			
+
 			break;
-			
+
 		case "client":
 			System.out.print("IP: ");
-			
-			WifiClient wicli = new WifiClient(in.nextLine(),Common.PORT);
-			
 
-			conn = wicli.getConnection();
-			
-			EmulatedMotor a = conn.getEmulatedMotor(Packet.PORT_A), b = conn.getEmulatedMotor(Packet.PORT_B);
+			conn = BNCPConnectionFactory.getWifiConnection(in.nextLine(),
+					Common.PORT);// initialize a connection over WiFi/LAN
 
-			a.setAcceleration(2000);
-			b.setAcceleration(2000);
+			startClient(conn);
 
-			JFrame window = new JFrame("Movement Control Debugger");
-			window.add(new MovementControlPanel(a,b));
-			window.setSize(new Dimension(150,100));
-			window.setVisible(true);
-		
-			
 			break;
-		
+		case "debug-client":
+			startClient(BNCPConnectionFactory.getDebugConnection());
+			break;
 		default:
-			System.out.println("Please enter server | client!");
-		
+			System.out.println("Please enter server | client | debug-client!");
+
 		}
+		in.close();
+
+	}
+
+	public static void startClient(BNCPConnection conn) throws IOException {
+		EmulatedMotor a = conn.getEmulatedMotor(Packet.PORT_A), b = conn
+				.getEmulatedMotor(Packet.PORT_B);
+
+		a.setAcceleration(2000);
+		b.setAcceleration(2000);
+
+		JFrame window = new JFrame("Movement Control Debugger");
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.add(new MovementControlPanel(a, b));
+		window.setSize(new Dimension(150, 100));
+		window.setVisible(true);
+		
+		JFrame window2 = new JFrame("CTRL");
+		window2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		MotorControlPanel mcp = new MotorControlPanel();
+		mcp.addMotor(a);
+		mcp.addMotor(b);
+		window2.add(mcp);
+		window2.pack();
+		window2.setVisible(true);
 
 	}
 
