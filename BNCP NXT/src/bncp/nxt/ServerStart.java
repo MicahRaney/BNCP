@@ -14,20 +14,23 @@ public class ServerStart {
 	 */
 	public static void main(String[] args) {
 		while (true) {
+
 			USBConnectionServer server = new USBConnectionServer(
 					new BasicPacketHandler());
 			server.init();
 			server.start();
 			Button.waitForAnyPress();
 			Sound.buzz();
+			
 			server.interrupt();
 			LCD.clear();
 			System.out.println("Resetting...");
 			lejos.nxt.Motor.A.stop();// stop all motors if user initiates manual
-			lejos.nxt.Motor.B.stop();//reset
+			lejos.nxt.Motor.B.stop();// reset
 			lejos.nxt.Motor.C.stop();
 			System.out.println("Restarting...");
 			Sound.beep();
+			System.exit(0);
 		}
 	}
 
