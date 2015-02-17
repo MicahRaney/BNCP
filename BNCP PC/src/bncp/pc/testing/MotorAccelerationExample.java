@@ -1,7 +1,8 @@
 package bncp.pc.testing;
 
 import lejos.pc.comm.NXTCommException;
-import bncp.pc.io.NXTPConnection;
+import bncp.pc.io.BNCPConnection;
+import bncp.pc.io.BNCPConnectionFactory;
 import bncp.pc.io.Packet;
 import bncp.pc.sensors.EmulatedMotor;
 
@@ -18,10 +19,7 @@ public class MotorAccelerationExample {
 			System.in.read();// block till a key is pressed.
 			System.out.println("\n\nConnecting...");
 			
-			NXTPConnection conn = new NXTPConnection();// create a connection
-														// instance
-			conn.init();// initialize the connection. (find the NXT)
-			conn.start();// Start the daemon for receiving messages.
+			BNCPConnection conn = BNCPConnectionFactory.getUSBConnection();//get a USB Connection Instance.
 
 			EmulatedMotor motorA = conn.getEmulatedMotor(Packet.PORT_A), motorB = conn
 					.getEmulatedMotor(Packet.PORT_B);// get motor instances.

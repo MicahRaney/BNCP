@@ -6,83 +6,62 @@ import bncp.pc.sensors.EmulatedMotor;
 import bncp.pc.sensors.EmulatedSensor;
 import bncp.pc.sensors.NXTPMotor;
 import bncp.pc.sensors.NXTPSensor;
-import lejos.pc.comm.NXTComm;
-import lejos.pc.comm.NXTCommException;
-import lejos.pc.comm.NXTCommFactory;
-import lejos.pc.comm.NXTInfo;
 
 /**
- * @deprecated
  * @author Micah Raney
  *
  */
-@Deprecated
-public class NXTPConnection extends Thread {
+public class BNCPConnection extends Thread {
 
 	private volatile LinkedList<PendingHolder> pending = new LinkedList<PendingHolder>();
 
-
 	private PacketIO io;
 
-	/**
-	 * Attempts to connect to a Mindstorms NXT Connected over USB.
-	 * 
-	 * @param args
-	 * @throws NXTCommException
-	 *             If one occurs or if no NXT can be found.
-	 */
-	public void init() throws NXTCommException {
-
-		NXTComm conn = NXTCommFactory.createNXTComm(NXTCommFactory.USB);
-		NXTInfo[] nxts = conn.search(null);
-		if (nxts.length == 0) {
-			System.out.println("No NXT Found!");
-			throw new NXTCommException("No NXT Found!");
-		}
-		System.out.println("Connecting to the first NXT available...");
-		conn.open(nxts[0], NXTComm.PACKET);
-		
-		System.out.println("Connected! Initializing IO...");
-		io = new PacketIO(conn);
-		System.out.println("IO Initialized!");
-
+	public BNCPConnection() {
+		setDaemon(true);
 	}
-	
-	public NXTPConnection(){
-		
-	}
-	
+
 	/**
 	 * Create an NXTPConnection using the PacketIO given.
-	 * @param io PacketIO to do communication with.
+	 * 
+	 * @param io
+	 *            PacketIO to do communication with.
 	 */
-	public NXTPConnection(PacketIO io){
+	public BNCPConnection(PacketIO io) {
 		this.io = io;
+		setDaemon(true);
 	}
 
 	@Override
 	public void run() {
 
 		if (io == null)
-			throw new IllegalStateException("NXTPConnection not initialized! Cannot continue!");
+			throw new IllegalStateException(
+					"NXTPConnection not initialized! Cannot continue!");
 
 		try {
 
 			while (!this.isInterrupted()) {
 				Packet pkt = read();
-				if (pkt instanceof ReplyPacket)// is there a thread waiting for
-												// this packet?
+				if (pkt instanceof ReplyPacket) {// is there a thread waiting
+													// for
+													// this packet?
 					synchronized (pending) {
 						int id = pkt.getDevicePortCode();
-						for (PendingHolder hld : pending) {
+						for (PendingHolder hld : pending) {// find the
+															// PendingHolder
+															// that is waiting
 							if (hld.ID == id) {
 								synchronized (hld) {
 									hld.reply = (ReplyPacket) pkt;
-									hld.notifyAll();
+									hld.notifyAll();// notify all the threads
+													// waiting on the
+													// PendingHolder.
 								}
 							}
 						}
 					}
+				}
 			}
 
 		} catch (Exception e) {
@@ -151,7 +130,7 @@ public class NXTPConnection extends Thread {
 			throws IOException, InterruptedException {
 
 		if (!isAlive())// if the thread has stopped/hasn't started, throw
-								// an
+						// an
 			// exception.
 			throw new IllegalStateException(
 					"The NXTPConnection thread is not running! Cannot wait for a reply packet!");
@@ -179,7 +158,6 @@ public class NXTPConnection extends Thread {
 	public void close() throws IOException {
 		throw new IllegalStateException("Method not implemented!");
 	}
-
 
 	public static class PendingHolder {
 		public int ID;

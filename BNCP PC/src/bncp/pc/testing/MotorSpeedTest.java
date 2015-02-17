@@ -2,7 +2,8 @@ package bncp.pc.testing;
 
 import bncp.pc.sensors.EmulatedMotor;
 import bncp.pc.sensors.EmulatedSensor;
-import bncp.pc.io.NXTPConnection;
+import bncp.pc.io.BNCPConnection;
+import bncp.pc.io.BNCPConnectionFactory;
 import bncp.pc.io.Packet;
 
 import java.io.IOException;
@@ -27,10 +28,9 @@ public class MotorSpeedTest {
 	 */
 	public static void main(String[] args) throws IOException,
 			NXTCommException, InterruptedException {
-		NXTPConnection conn = new NXTPConnection();
-		conn.init();
-		conn.setDaemon(true);
-		conn.start();
+
+		BNCPConnection conn = BNCPConnectionFactory.getUSBConnection();
+
 		EmulatedMotor motorA = conn.getEmulatedMotor(Packet.PORT_A);
 
 		Scanner in = new Scanner(System.in);

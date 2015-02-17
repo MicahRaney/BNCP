@@ -4,16 +4,16 @@ import java.io.IOException;
 
 import bncp.pc.io.GetPacket;
 import bncp.pc.io.MotorPacket;
-import bncp.pc.io.NXTPConnection;
+import bncp.pc.io.BNCPConnection;
 import bncp.pc.io.Packet;
 import bncp.pc.io.SetPacket;
 
 public class NXTPMotor implements EmulatedMotor {
 
-	private final NXTPConnection conn;
+	private final BNCPConnection conn;
 	private final int port;
 
-	public NXTPMotor(NXTPConnection connection, int port) {
+	public NXTPMotor(BNCPConnection connection, int port) {
 		conn = connection;
 		this.port = port;
 	}

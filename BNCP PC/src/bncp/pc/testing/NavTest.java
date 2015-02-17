@@ -2,7 +2,7 @@ package bncp.pc.testing;
 
 import bncp.pc.sensors.EmulatedMotor;
 import bncp.pc.sensors.EmulatedSensor;
-import bncp.pc.io.NXTPConnection;
+import bncp.pc.io.BNCPConnection;
 import bncp.pc.io.Packet;
 
 import java.io.IOException;
