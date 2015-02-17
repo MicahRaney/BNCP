@@ -4,7 +4,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 
-import bncp.pc.io.NXTPConnection;
+import bncp.pc.io.BNCPConnection;
+import bncp.pc.io.BasicPacketIO;
 import bncp.pc.io.Packet;
 import bncp.pc.io.PacketIO;
 import bncp.pc.io.PingPacket;
@@ -12,56 +13,56 @@ import bncp.pc.wifi.Authentication;
 import bncp.pc.wifi.Common;
 
 public class WifiServer extends Thread {
-	
 
-	NXTPConnection nxtconn;
+	BNCPConnection nxtconn;
 	private LinkedList<PingListener> pingListeners = new LinkedList<PingListener>();
 
-	
-	public WifiServer(NXTPConnection conn){
+	public WifiServer(BNCPConnection conn) {
 		nxtconn = conn;
 	}
-	
-	
+
 	public void run() {
 
-		try {
+		while (!isInterrupted()) {
 
-			// get connection.
-			ServerSocket ssock = new ServerSocket(Common.PORT);
-			Socket sock = ssock.accept();
-			PacketIO io = new PacketIO(sock);
+			try {
 
-			// TODO: Authentication/Handshake.
-			if (!Authentication.Authenticate(io)) {
-				// TODO: AUTH FAILED! Do what?
-				System.out.println("Authentication failed...");
-				sock.close();
-				return;
-			}
+				// get connection.
+				ServerSocket ssock = new ServerSocket(Common.PORT);
+				Socket sock = ssock.accept();
+				ssock.close();
+				PacketIO io = new BasicPacketIO(sock);
 
-			while (!isInterrupted()) {
-				Packet in = io.read();
-				if (in instanceof PingPacket) {
-					long time = System.currentTimeMillis();
-					for (PingListener listener : pingListeners)
-						listener.pingRecieved(time);
+				// TODO: Authentication/Handshake.
+				if (!Authentication.Authenticate(io)) {
+					// TODO: AUTH FAILED! Do what?
+					System.out.println("Authentication failed...");
+					sock.close();
+					return;
 				}
-				else
-					nxtconn.send(in);
+
+				while (!isInterrupted()) {
+					Packet in = io.read();
+					if (in instanceof PingPacket) {
+						long time = System.currentTimeMillis();
+						for (PingListener listener : pingListeners)
+							listener.pingRecieved(time);
+					} else
+						nxtconn.send(in);
+				}
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			
 			}
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
 		}
-
 	}
 
-	public void addPingListener(PingListener pl){
+	public void addPingListener(PingListener pl) {
 		pingListeners.add(pl);
 	}
-	
+
 	public void suggestStop() {
 		interrupt();
 	}

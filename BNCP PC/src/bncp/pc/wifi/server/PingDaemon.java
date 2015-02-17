@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.swing.Timer;
 
 import bncp.pc.io.MotorPacket;
-import bncp.pc.io.NXTPConnection;
+import bncp.pc.io.BNCPConnection;
 import bncp.pc.io.Packet;
 import bncp.pc.wifi.Common;
 
@@ -19,9 +19,9 @@ public class PingDaemon implements PingListener, ActionListener {
 	private volatile int alarmTime;
 	private volatile long lastPing = 0;
 	private Timer timer;
-	private NXTPConnection conn;
+	private BNCPConnection conn;
 
-	public PingDaemon(NXTPConnection conn, int alarmTime) {
+	public PingDaemon(BNCPConnection conn, int alarmTime) {
 		this.conn = conn;
 		this.alarmTime = alarmTime;
 
