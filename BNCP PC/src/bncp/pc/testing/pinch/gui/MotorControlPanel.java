@@ -24,7 +24,7 @@ public class MotorControlPanel extends JPanel implements ChangeListener {
 		// Initialize the two sliders
 		accelSlider = new JSlider(JSlider.VERTICAL);
 		accelSlider.setName("acceleration-slider");
-		accelSlider.setMaximum(10000);
+		accelSlider.setMaximum(7000);
 		accelSlider.setMinimum(100);
 		accelSlider.setPaintTicks(true);
 		accelSlider.setMajorTickSpacing(1000);
@@ -34,7 +34,7 @@ public class MotorControlPanel extends JPanel implements ChangeListener {
 
 		speedSlider = new JSlider(JSlider.VERTICAL);
 		speedSlider.setName("speed-slider");
-		speedSlider.setMaximum(10000);
+		speedSlider.setMaximum(5000);
 		speedSlider.setMinimum(100);
 		speedSlider.setPaintTicks(true);
 		speedSlider.setMajorTickSpacing(1000);
@@ -61,7 +61,9 @@ public class MotorControlPanel extends JPanel implements ChangeListener {
 
 	}
 
-	public void addMotor(EmulatedMotor mot) {
+	public void addMotor(EmulatedMotor mot) throws IOException {
+		mot.setSpeed(speedSlider.getValue());
+		mot.setAcceleration(accelSlider.getValue());
 		synchronized(motors){
 			motors.add(mot);	
 		}
