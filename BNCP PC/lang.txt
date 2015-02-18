@@ -1,0 +1,4 @@
+AccelerationSlider.Label=A
+SpeedSlider.Label=S
+AccelerationSlider.Tooltip=Motor Acceleration
+SpeedSlider.Tooltip=Motor Speed
