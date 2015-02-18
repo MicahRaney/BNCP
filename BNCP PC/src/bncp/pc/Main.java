@@ -1,5 +1,6 @@
 package bncp.pc;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.util.Scanner;
@@ -66,21 +67,21 @@ public class Main {
 		a.setAcceleration(2000);
 		b.setAcceleration(2000);
 
-		JFrame window = new JFrame("Movement Control Debugger");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.add(new MovementControlPanel(a, b));
-		window.setSize(new Dimension(150, 100));
-		window.setVisible(true);
-		
-		JFrame window2 = new JFrame("CTRL");
-		window2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		MotorControlPanel mcp = new MotorControlPanel();
 		mcp.addMotor(a);
 		mcp.addMotor(b);
-		window2.add(mcp);
-		window2.pack();
-		window2.setVisible(true);
-
+		
+		JFrame window = new JFrame("Movement Control Debugger");
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		window.setLayout(new BorderLayout());
+		window.add(new MovementControlPanel(a, b), BorderLayout.CENTER);
+		window.add(mcp, BorderLayout.WEST);
+		
+		window.setSize(new Dimension(150, 100));
+		window.pack();
+		window.setVisible(true);
+		
 	}
 
 }
