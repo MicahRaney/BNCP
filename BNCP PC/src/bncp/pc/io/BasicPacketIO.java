@@ -10,7 +10,7 @@ import lejos.pc.comm.NXTComm;
 
 //import lejos.nxt.comm.NXTConnection;
 
-public class BasicPacketIO implements PacketIO{
+public class BasicPacketIO implements PacketIO {
 	/**
 	 * String encoding used for all text based transfers.
 	 */
@@ -32,12 +32,14 @@ public class BasicPacketIO implements PacketIO{
 				conn.getOutputStream()));
 		// this(conn.openDataInputStream(), conn.openDataOutputStream());
 	}
+
 	/**
 	 * Initializes the PacketIO to use the Socket given.
 	 * 
 	 * @param conn
 	 *            Connection to use.
-	 * @throws IOException If an IOException occurs.
+	 * @throws IOException
+	 *             If an IOException occurs.
 	 */
 	public BasicPacketIO(Socket conn) throws IOException {
 		this(new DataInputStream(conn.getInputStream()), new DataOutputStream(
@@ -64,14 +66,15 @@ public class BasicPacketIO implements PacketIO{
 	 * @param pkt
 	 *            Packet to send.
 	 */
-	public synchronized void send(Packet pkt) throws IOException {
-		
-		
-		out.write(getPacketID(pkt));//write the packet ID number.
-		
+	public void send(Packet pkt) throws IOException {
 
-		pkt.send(out);// send the packet.
-		out.flush();
+		synchronized (out) {//only send one packet at a time!
+
+			out.write(getPacketID(pkt));// write the packet ID number.
+			pkt.send(out);// send the packet.
+			out.flush();
+			
+		}
 	}
 
 	/**
@@ -81,10 +84,15 @@ public class BasicPacketIO implements PacketIO{
 	 * @throws IOException
 	 *             If an IOException occurs.
 	 */
-	public synchronized Packet read() throws IOException {
-		int type = in.read();// what type of packet is it.
-		Packet pkt = getPacketType(type);
-		pkt.recieve(in);// read the packet.
+	public Packet read() throws IOException {
+		Packet pkt;
+		synchronized (in) {// only read one packet at a time!
+			
+			int type = in.read();// what type of packet is it.
+			pkt = getPacketType(type);
+			pkt.recieve(in);// read the packet.
+			
+		}
 		return pkt;
 	}
 
@@ -106,20 +114,21 @@ public class BasicPacketIO implements PacketIO{
 	 */
 	public static int getPacketID(Packet pkt) {
 		if (pkt instanceof MotorPacket)
-			return MOTOR_PACKET;//return MotorPacket ID.
+			return MOTOR_PACKET;// return MotorPacket ID.
 		else if (pkt instanceof GetPacket)
-			return GET_PACKET;//GetPacket ID.
+			return GET_PACKET;// GetPacket ID.
 		else if (pkt instanceof ReplyPacket)
-			return REPLY_PACKET;//ReplyPacket ID.
+			return REPLY_PACKET;// ReplyPacket ID.
 		else if (pkt instanceof InitPacket)
-			return INIT_PACKET;//InitPacket ID
+			return INIT_PACKET;// InitPacket ID
 		else if (pkt instanceof SetPacket)
-			return SET_PACKET;//SetPacket ID
+			return SET_PACKET;// SetPacket ID
 		else if (pkt instanceof PingPacket)
-			return PING_PACKET;//PingPacket ID
+			return PING_PACKET;// PingPacket ID
 		else
 			throw new IllegalArgumentException(
-					"The packet type is not supported! Invalid Packet: " + pkt.getClass());
+					"The packet type is not supported! Invalid Packet: "
+							+ pkt.getClass());
 	}
 
 	/**
