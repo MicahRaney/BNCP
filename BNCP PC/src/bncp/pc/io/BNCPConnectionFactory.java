@@ -13,7 +13,6 @@ public class BNCPConnectionFactory {
 	/**
 	 * Attempts to connect to a Mindstorms NXT Connected over USB.
 	 * 
-	 * @param args
 	 * @throws NXTCommException
 	 *             If one occurs, or if no NXT can be found.
 	 */

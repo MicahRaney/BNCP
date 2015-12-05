@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Map;
 
 import lejos.pc.comm.NXTComm;
 
@@ -50,7 +49,8 @@ public class BasicPacketIO implements PacketIO {
 	 * Initialize a connection with the specified connector. The connection must
 	 * already be opened!
 	 * 
-	 * @param conn
+	 * @param in DataInputStream to read from
+	 * @param out DataOutputStream to write to
 	 */
 	public BasicPacketIO(DataInputStream in, DataOutputStream out) {
 		this.in = in;

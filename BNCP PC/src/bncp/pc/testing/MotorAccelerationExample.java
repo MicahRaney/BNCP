@@ -1,6 +1,5 @@
 package bncp.pc.testing;
 
-import lejos.pc.comm.NXTCommException;
 import bncp.pc.io.BNCPConnection;
 import bncp.pc.io.BNCPConnectionFactory;
 import bncp.pc.io.Packet;
